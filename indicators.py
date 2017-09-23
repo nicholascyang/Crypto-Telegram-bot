@@ -42,7 +42,8 @@ def checkStochastic(interval, K, D):
         for coin in coins:
             # get data from bittrex
             url = 'https://bittrex.com/Api/v2.0/pub/market/' + \
-                  'GetTicks?marketName=BTC-%s&tickInterval=%s' % (coin[0], interval)
+                  'GetTicks?marketName=BTC-%s&tickInterval=%s' % (coin[0],
+                                                                  interval)
             urlOpen = urllib2.urlopen(url).read()
             tickData = json.loads(urlOpen)
 
@@ -64,12 +65,11 @@ def checkStochastic(interval, K, D):
 
                 curClose = tickData['result'][-1]['C']
                 stoch = (curClose - low)/(high - low) * 100
-                if i is 0:
-                    STOK = stoch
                 del tickData['result'][-1:]
                 total += stoch
             SmoothK = total/D
             coin[1] = SmoothK
+
             if SmoothK > 75:
                 if coin[2] is True:
 
@@ -78,7 +78,8 @@ def checkStochastic(interval, K, D):
                            (coin[0], 'rose above 75', interval, coin[1])
                     print msg
                     bot.send_message(chat_id=recipient,
-                                     text=msg, parse_mode=telegram.ParseMode.HTML)
+                                     text=msg,
+                                     parse_mode=telegram.ParseMode.HTML)
                     coin[2] = False
             elif SmoothK < 25:
                 if coin[2] is True:
@@ -86,14 +87,16 @@ def checkStochastic(interval, K, D):
                           'interval currently at: <b>%s</b>' % \
                            (coin[0], 'fell below 25', interval, coin[1])
                     bot.send_message(chat_id=recipient,
-                                     text=msg, parse_mode=telegram.ParseMode.HTML)
+                                     text=msg,
+                                     parse_mode=telegram.ParseMode.HTML)
                     coin[2] = False
             elif coin[2] is False:
                     msg = '📉<b>%s</b> stochastic %s on <b>%s</b> \n' \
                           'interval currently at: <b>%s</b>' % \
                            (coin[0], 'back to neutral', interval, coin[1])
                     bot.send_message(chat_id=recipient,
-                                     text=msg, parse_mode=telegram.ParseMode.HTML)
+                                     text=msg,
+                                     parse_mode=telegram.ParseMode.HTML)
                     coin[2] = True
         time.sleep(360)
 
